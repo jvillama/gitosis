@@ -215,6 +215,58 @@ Frobitz the quux and eschew obfuscation.
     eq(got[6], 'Frobitz the quux and eschew obfuscation.')
     eq(got[7:], [])
 
+def test_export_simple2():
+    tmp = maketemp()
+    git_dir = os.path.join(tmp, 'repo.git')
+    repository.init(path=git_dir)
+    repository.fast_import(
+        git_dir=git_dir,
+        committer='John Doe 2 <jdoe@example.com>',
+        commit_msg="""\
+Reverse the polarity of the neutron flow.
+
+Frobitz the quux and eschew obfuscation.
+""",
+        files=[
+            ('foo', 'content'),
+            ('bar/quux', 'another'),
+            ],
+        )
+    export = os.path.join(tmp, 'export', 'var', 'sites')
+    print "Second Export: " + export
+    repository.export2(git_dir=git_dir, path=export)
+    eq(sorted(os.listdir(export)),
+       sorted(['foo', 'bar']))
+    eq(readFile(os.path.join(export, 'foo')), 'content')
+    eq(os.listdir(os.path.join(export, 'bar')), ['quux'])
+    eq(readFile(os.path.join(export, 'bar', 'quux')), 'another')
+    child = subprocess.Popen(
+        args=[
+            'git',
+            '--git-dir=%s' % git_dir,
+            'cat-file',
+            'commit',
+            'HEAD',
+            ],
+        cwd=git_dir,
+        stdout=subprocess.PIPE,
+        close_fds=True,
+        )
+    got = child.stdout.read().splitlines()
+    returncode = child.wait()
+    if returncode != 0:
+        raise RuntimeError('git exit status %d' % returncode)
+    eq(got[0].split(None, 1)[0], 'tree')
+    eq(got[1].rsplit(None, 2)[0],
+       'author John Doe 2 <jdoe@example.com>')
+    eq(got[2].rsplit(None, 2)[0],
+       'committer John Doe 2 <jdoe@example.com>')
+    eq(got[3], '')
+    eq(got[4], 'Reverse the polarity of the neutron flow.')
+    eq(got[5], '')
+    eq(got[6], 'Frobitz the quux and eschew obfuscation.')
+    eq(got[7:], [])
+
 def test_export_environment():
     tmp = maketemp()
     git_dir = os.path.join(tmp, 'repo.git')
@@ -379,3 +431,99 @@ def test_mirror():
         )
     eq(os.listdir(export),
        ['foo'])
+
+def test_push():
+    tmp = maketemp()
+    main_path = os.path.join(tmp, 'main2.git')
+    mirror_path = os.path.join(tmp, 'mirror2.git')
+    repository.init(path=main_path, template=False)
+    repository.init(path=mirror_path, template=False)
+    repository.fast_import(
+        git_dir=main_path,
+        commit_msg='foo initial bar 2',
+        committer='Mr. Unit Test 2 <unit.test@example.com>',
+        files=[
+            ('foo', 'bar\n'),
+            ],
+        )
+    repository.push(main_path, mirror_path)
+    export = os.path.join(tmp, 'export')
+    repository.export(
+        git_dir=mirror_path,
+        path=export,
+        )
+    eq(os.listdir(export),
+       ['foo'])
+
+def test_dcontrol():
+    tmp = maketemp()
+    git_dir = os.path.join(tmp, 'repo.git')
+    repository.init(path=git_dir)
+    repository.fast_import(
+        git_dir=git_dir,
+        committer='John Doe 2 <jdoe@example.com>',
+        commit_msg="""\
+Allow jdoe write access to repo
+""",
+        files=[
+            ('foo', 'content'),
+            ('bar/quux', 'another'),
+            ],
+        )
+    export = os.path.join(tmp, 'export', 'var', 'sites')
+    print "Second Export: " + export
+    repository.export2(git_dir=git_dir, path=export)
+    eq(sorted(os.listdir(export)),
+       sorted(['foo', 'bar']))
+    eq(readFile(os.path.join(export, 'foo')), 'content')
+    eq(os.listdir(os.path.join(export, 'bar')), ['quux'])
+    eq(readFile(os.path.join(export, 'bar', 'quux')), 'another')
+    child = subprocess.Popen(
+        args=[
+            'git',
+            '--git-dir=%s' % git_dir,
+            'cat-file',
+            'commit',
+            'HEAD',
+            ],
+        cwd=git_dir,
+        stdout=subprocess.PIPE,
+        close_fds=True,
+        )
+    got = child.stdout.read().splitlines()
+    returncode = child.wait()
+    if returncode != 0:
+        raise RuntimeError('git exit status %d' % returncode)
+    eq(got[0].split(None, 1)[0], 'tree')
+    eq(got[1].rsplit(None, 2)[0],
+       'author John Doe 2 <jdoe@example.com>')
+    eq(got[2].rsplit(None, 2)[0],
+       'committer John Doe 2 <jdoe@example.com>')
+    eq(got[3], '')
+    eq(got[4], 'Allow jdoe write access to repo')
+    eq(got[5:], [])
+
+    main_path = os.path.join(tmp, 'main.git')
+    mirror_path = os.path.join(tmp, 'mirror.git')
+    rep2 = repository
+    rep2.init(path=main_path, template=False)
+    rep2.init(path=mirror_path, template=False)
+    rep2.fast_import(
+        git_dir=main_path,
+        commit_msg='foo initial bar',
+        committer='Mr. Unit Test <unit.test@example.com>',
+        files=[
+            ('foo', 'bar\n'),
+            ],
+        )
+    rep2.mirror(main_path, mirror_path)
+    export2 = os.path.join(tmp, 'export')
+    rep2.export(
+        git_dir=mirror_path,
+        path=export2,
+        )
+    eq(os.listdir(export2),
+       ['foo'])
+    #eq(readFile(os.path.join(export, 'foo')), 'bar\n')
+
+

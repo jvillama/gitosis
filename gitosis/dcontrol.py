@@ -16,7 +16,7 @@ from gitosis import app
 from gitosis import util
 from gitosis import snagit
 
-log = logging.getLogger('gitosis.serve')
+log = logging.getLogger('dcontrol.serve')
 
 ALLOW_RE = re.compile("^'/*(?P<path>[a-zA-Z0-9][a-zA-Z0-9@._-]*(/[a-zA-Z0-9][a-zA-Z0-9@._-]*)*)'$")
 
@@ -144,6 +144,7 @@ def serve(
             util.mkdir(p, 0750)
 
         repository.init(path=fullpath)
+        
         gitweb.set_descriptions(
             config=cfg,
             )
@@ -155,12 +156,29 @@ def serve(
         gitdaemon.set_export_ok(
             config=cfg,
             )
+    
+    elif (os.path.exists(fullpath)
+        and verb in COMMANDS_WRITE):
+        # exportdir = os.path.join('/var/sites')
+        
+        #git_dir = os.path.join(tmp, 'repo.git')
+        #repository.init(path=git_dir)
 
+        #repository.export2(git_dir=fullpath, path=exportdir)
+        #varsites = os.path.join(tmp, 'var', 'sites', projname)
+        #print "Export2: " + export
+
+        print fullpath
+        exportpath = os.path.join(fullpath, 'var', 'sites', relpath)
+        print exportpath
+        repository.export2(git_dir=fullpath, path=exportpath)
+    
     # put the verb back together with the new path
     newcmd = "%(verb)s '%(path)s'" % dict(
         verb=verb,
         path=fullpath,
         )
+    print newcmd
     return newcmd
 
 class Main(app.App):
@@ -177,7 +195,7 @@ class Main(app.App):
         except ValueError:
             parser.error('Missing argument USER.')
 
-        main_log = logging.getLogger('gitosis.serve.main')
+        main_log = logging.getLogger('dcontrol.serve.main')
         os.umask(0022)
 
         cmd = os.environ.get('SSH_ORIGINAL_COMMAND', None)
@@ -211,6 +229,8 @@ class Main(app.App):
 
         main_log.debug('Serving %s', newcmd)
         os.execvp('git', ['git', 'shell', '-c', newcmd])
+        #os.execvp('git', ['git', 'export', '-c', newcmd])
         #subprocess.check_call(['git', 'shell', '-c', newcmd])
         main_log.error('Cannot execute git-shell.')
         sys.exit(1)
+

@@ -98,7 +98,7 @@ def set_export_ok(config):
         except (NoSectionError, NoOptionError):
             enable = global_enable
             if not enable and enable_if_all:
-                (users,groups,all_refs) = access.getAllAccess(config,name)
+                (users,groups,all_refs) = access.haveAccess(config,name)
                 enable = ('@all' in all_refs)
 
         if enable:

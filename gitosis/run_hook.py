@@ -20,7 +20,12 @@ from gitosis import mirror
 def post_update(cfg, git_dir):
     export = os.path.join(git_dir, 'gitosis-export')
     try:
+        current_dir = os.getcwd()
+        print current_dir
         shutil.rmtree(export)
+        print export
+        os.chdir(current_dir)
+        print os.getcwd()
     except OSError, e:
         if e.errno == errno.ENOENT:
             pass

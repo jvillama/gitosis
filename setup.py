@@ -43,6 +43,7 @@ arbitrary commands.
     entry_points = {
         'console_scripts': [
             'gitosis-serve = gitosis.serve:Main.run',
+            'dcontrol-serve = dcontrol.serve:Main.run',
             'gitosis-run-hook = gitosis.run_hook:Main.run',
             'gitosis-init = gitosis.init:Main.run',
             ],
