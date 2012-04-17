@@ -169,7 +169,7 @@ def serve(
         #print "Export2: " + export
 
         print fullpath
-        exportpath = os.path.join(fullpath, 'var', 'sites', relpath)
+        exportpath = os.path.join('/var', 'sites', relpath)
         print exportpath
         repository.export2(git_dir=fullpath, path=exportpath)
     
