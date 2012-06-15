@@ -15,6 +15,7 @@ from gitosis import gitdaemon
 from gitosis import app
 from gitosis import util
 from gitosis import snagit
+from gitosis import buildhook
 
 log = logging.getLogger('dcontrol.serve')
 
@@ -169,9 +170,13 @@ def serve(
         #print "Export2: " + export
 
         print fullpath
-        exportpath = os.path.join('/var', 'sites', relpath)
+        exportpath = os.path.join('/var/sites', relpath) # /var/sites must be editable by everyone chmod -R 777
+        print relpath
+        buildhook.notify(relpath)
         print exportpath
         repository.export2(git_dir=fullpath, path=exportpath)
+
+        # Run buildhook.py here to notify buildserver of this repo
     
     # put the verb back together with the new path
     newcmd = "%(verb)s '%(path)s'" % dict(
