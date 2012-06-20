@@ -15,7 +15,8 @@ socket.connect(socket_location)
 # use poll for timeouts:
 poller = zmq.Poller()
 poller.register(socket, zmq.POLLIN)
-timeout = 3*1000 # 3s timeout in milliseconds
+# timeout in milliseconds
+timeout = config.get('Gitosis Config', 'timeout')
 
 def polltest():
     #socket.send_json({"msg": "testmsg"}) # send can block on other socket types, so keep track

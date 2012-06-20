@@ -1,3 +1,3 @@
 [Gitosis Config]
 socket = tcp://localhost:5546
-
+timeout = 3000
