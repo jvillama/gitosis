@@ -10,19 +10,22 @@
 #cd /home
 #sudo adduser --system --shell /bin/sh --gecos 'git version control' --group --disabled-password --home /home/git git
 #sudo mkdir /home/git/.ssh
+#sudo chown -R git:git /home/git/.ssh
 #sudo ssh-keygen -t rsa #create file in /home/git/.ssh/id_rsa
 
-sudo git clone git://github.com/jvillama/gitosis.git
-cd gitosis
+#cd /home/git
+#sudo git clone git://github.com/jvillama/gitosis.git
+#cd gitosis
 
 sudo python setup.py install
-sudo chown -R git:git /home/git/.ssh
+# To install gitosis-admin repo:
+#cd ..
 sudo gitosis-init < /home/git/.ssh/id_rsa.pub
-#sudo -H -u git gitosis-init < /home/git/.ssh/id_rsa.pub
+sudo -H -u git gitosis-init < /home/git/.ssh/id_rsa.pub
 sudo chmod 755 /home/git/repositories/gitosis-admin.git/hooks/post-update
 
-#sudo vi /etc/gitosis/config
 sudo mkdir /etc/gitosis
-sudo cp config /etc/gitosis/config
+sudo cp gitosis/config /etc/gitosis/config
 
-#sudo nosetests gitosis/test/test_dcontrol.py
+# To test:
+#sudo nosetests gitosis/gitosis/test/test_dcontrol.py
