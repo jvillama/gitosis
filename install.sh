@@ -25,7 +25,7 @@ sudo -H -u git gitosis-init < /home/git/.ssh/id_rsa.pub
 sudo chmod 755 /home/git/repositories/gitosis-admin.git/hooks/post-update
 
 sudo mkdir /etc/gitosis
-sudo cp gitosis/config /etc/gitosis/config
+sudo cp config /etc/gitosis/config
 
 # To test:
 #sudo nosetests gitosis/gitosis/test/test_dcontrol.py
