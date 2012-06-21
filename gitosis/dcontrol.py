@@ -168,12 +168,12 @@ def serve(
         #repository.export2(git_dir=fullpath, path=exportdir)
         #varsites = os.path.join(tmp, 'var', 'sites', projname)
         #print "Export2: " + export
+        #exportpath = os.path.join('/var/sites', relpath) # /var/sites must be editable by everyone chmod -R 777
+        #print exportpath
 
         print fullpath
-        #exportpath = os.path.join('/var/sites', relpath) # /var/sites must be editable by everyone chmod -R 777
         print relpath
         buildhook.notify(relpath)
-        #print exportpath
         #repository.export2(git_dir=fullpath, path=exportpath)
 
         # Run buildhook.py here to notify buildserver of this repo

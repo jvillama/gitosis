@@ -9,6 +9,7 @@ from ConfigParser import RawConfigParser
 
 from gitosis import dcontrol
 from gitosis import repository
+from gitosis import buildhook
 
 from gitosis.test import util
 
@@ -551,15 +552,15 @@ Allow jdoe write access to foo
     
     print git_dir
     #export = os.path.join(tmp, 'export2')
-    varsites = os.path.join(tmp, 'var', 'sites', projname)
+    #varsites = os.path.join(tmp, 'var', 'sites', projname)
     #print "Export2: " + export
-    print git_dir
-    repository.export2(git_dir=git_dir, path=varsites)
-    eq(sorted(os.listdir(varsites)),
-       sorted(['foo', 'bar']))
-    eq(readFile(os.path.join(varsites, 'foo')), 'content')
-    eq(os.listdir(os.path.join(varsites, 'bar')), ['quux'])
-    eq(readFile(os.path.join(varsites, 'bar', 'quux')), 'another')
+    #print git_dir
+    #repository.export2(git_dir=git_dir, path=varsites)
+    #eq(sorted(os.listdir(varsites)),
+    #   sorted(['foo', 'bar']))
+    #eq(readFile(os.path.join(varsites, 'foo')), 'content')
+    #eq(os.listdir(os.path.join(varsites, 'bar')), ['quux'])
+    #eq(readFile(os.path.join(varsites, 'bar', 'quux')), 'another')
     child = subprocess.Popen(
         args=[
             'git',
@@ -620,4 +621,6 @@ Allow jdoe write access to foo
     #eq(os.listdir(export),
     #   ['foo'])
     
-
+def test_buildhook():
+    buildhook.notify('asdf')
+ 
