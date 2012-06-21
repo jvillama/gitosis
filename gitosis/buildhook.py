@@ -55,7 +55,7 @@ class BuildHook(object):
             self.socket.send("Hello")
             #  Get the reply.
             if self.poller.poll(self.timeout):
-                message = socket.recv()
+                message = self.socket.recv()
                 print "Received reply ", request, "[", message, "]"
             else:
                 print "Couldn't Connect to Server, please try again"
@@ -66,7 +66,7 @@ class BuildHook(object):
 
         if self.poller.poll(self.timeout):
             # Get the reply
-            message = socket.recv()
+            message = self.socket.recv()
             print "Received reply [", message, "]"
         else:
             print "Couldn't Connect to Server, please try again"
