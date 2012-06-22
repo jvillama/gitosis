@@ -6,7 +6,7 @@ prefix. Repository names are forced to match ALLOW_RE.
 
 import logging
 
-import sys, os, re, subprocess
+import sys, os, re
 
 from gitosis import access
 from gitosis import repository
@@ -211,6 +211,5 @@ class Main(app.App):
 
         main_log.debug('Serving %s', newcmd)
         os.execvp('git', ['git', 'shell', '-c', newcmd])
-        #subprocess.check_call(['git', 'shell', '-c', newcmd])
         main_log.error('Cannot execute git-shell.')
         sys.exit(1)

@@ -157,47 +157,6 @@ def export(git_dir, path):
             pass
         else:
             raise
-    print git_dir
-    returncode = subprocess.call(
-        args=[
-            'git',
-            '--git-dir=%s' % git_dir,
-            'read-tree',
-            'HEAD',
-            ],
-        close_fds=True,
-        )
-    if returncode != 0:
-        raise GitReadTreeError('exit status %d' % returncode)
-    # jumping through hoops to be compatible with git versions
-    # that don't have --work-tree=
-    env = {}
-    env.update(os.environ)
-    env['GIT_WORK_TREE'] = '.'
-    returncode = subprocess.call(
-        args=[
-            'git',
-            '--git-dir=%s' % os.path.abspath(git_dir),
-            'checkout-index',
-            '-a',
-            '-f',
-            ],
-        cwd=path,
-        close_fds=True,
-        env=env,
-        )
-    if returncode != 0:
-        raise GitCheckoutIndexError('exit status %d' % returncode)
-
-def export2(git_dir, path):
-    try:
-        #os.mkdir(path)
-        os.makedirs(path)
-    except OSError, e:
-        if e.errno == errno.EEXIST:
-            pass
-        else:
-            raise
     returncode = subprocess.call(
         args=[
             'git',

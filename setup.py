@@ -21,9 +21,9 @@ setup(
     version = "0.1",
     packages = find_packages(),
 
-    author = "Joshua Villamarzo",
-    author_email = "jvillamarzo@bluewaterads.com",
-    description = "software for hosting automated git repositories",
+    author = "Tommi Virtanen",
+    author_email = "tv@eagain.net",
+    description = "software for hosting git repositories",
     long_description = """
 
 Manage git repositories, provide access to them over SSH, with tight

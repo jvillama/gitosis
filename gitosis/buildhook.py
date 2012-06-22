@@ -61,15 +61,16 @@ class BuildHook(object):
                 print "Couldn't Connect to Server, please try again"
 
     def notify(self, reponame):
-        print "Sending request for repo '"+reponame+"' to build server"
+        #print "Sending request for repo '"+reponame+"' to build server"
         self.socket.send(reponame)
 
         if self.poller.poll(self.timeout):
             # Get the reply
             message = self.socket.recv()
-            print "Received reply [", message, "]"
+            #print "Received reply [", message, "]"
         else:
-            print "Couldn't Connect to Server, please try again"
+            pass
+            #print "Couldn't Connect to Server, please try again"
 
 def polltest():
     """High level pollmsg test"""

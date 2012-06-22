@@ -157,33 +157,20 @@ def serve(
         gitdaemon.set_export_ok(
             config=cfg,
             )
+        # Run buildhook.py here to notify buildserver of this repo
+        buildhook.notify(relpath)
     
     elif (os.path.exists(fullpath)
         and verb in COMMANDS_WRITE):
-        # exportdir = os.path.join('/var/sites')
-        
-        #git_dir = os.path.join(tmp, 'repo.git')
-        #repository.init(path=git_dir)
-
-        #repository.export2(git_dir=fullpath, path=exportdir)
-        #varsites = os.path.join(tmp, 'var', 'sites', projname)
-        #print "Export2: " + export
-        #exportpath = os.path.join('/var/sites', relpath) # /var/sites must be editable by everyone chmod -R 777
-        #print exportpath
-
-        print fullpath
-        print relpath
-        buildhook.notify(relpath)
-        #repository.export2(git_dir=fullpath, path=exportpath)
 
         # Run buildhook.py here to notify buildserver of this repo
-    
+        buildhook.notify(relpath)
+            
     # put the verb back together with the new path
     newcmd = "%(verb)s '%(path)s'" % dict(
         verb=verb,
         path=fullpath,
         )
-    print newcmd
     return newcmd
 
 class Main(app.App):
