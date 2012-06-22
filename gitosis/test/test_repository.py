@@ -215,58 +215,6 @@ Frobitz the quux and eschew obfuscation.
     eq(got[6], 'Frobitz the quux and eschew obfuscation.')
     eq(got[7:], [])
 
-def test_export_simple2():
-    tmp = maketemp()
-    git_dir = os.path.join(tmp, 'repo.git')
-    repository.init(path=git_dir)
-    repository.fast_import(
-        git_dir=git_dir,
-        committer='John Doe 2 <jdoe@example.com>',
-        commit_msg="""\
-Reverse the polarity of the neutron flow.
-
-Frobitz the quux and eschew obfuscation.
-""",
-        files=[
-            ('foo', 'content'),
-            ('bar/quux', 'another'),
-            ],
-        )
-    export = os.path.join(tmp, 'export', 'var', 'sites')
-    print "Second Export: " + export
-    repository.export2(git_dir=git_dir, path=export)
-    eq(sorted(os.listdir(export)),
-       sorted(['foo', 'bar']))
-    eq(readFile(os.path.join(export, 'foo')), 'content')
-    eq(os.listdir(os.path.join(export, 'bar')), ['quux'])
-    eq(readFile(os.path.join(export, 'bar', 'quux')), 'another')
-    child = subprocess.Popen(
-        args=[
-            'git',
-            '--git-dir=%s' % git_dir,
-            'cat-file',
-            'commit',
-            'HEAD',
-            ],
-        cwd=git_dir,
-        stdout=subprocess.PIPE,
-        close_fds=True,
-        )
-    got = child.stdout.read().splitlines()
-    returncode = child.wait()
-    if returncode != 0:
-        raise RuntimeError('git exit status %d' % returncode)
-    eq(got[0].split(None, 1)[0], 'tree')
-    eq(got[1].rsplit(None, 2)[0],
-       'author John Doe 2 <jdoe@example.com>')
-    eq(got[2].rsplit(None, 2)[0],
-       'committer John Doe 2 <jdoe@example.com>')
-    eq(got[3], '')
-    eq(got[4], 'Reverse the polarity of the neutron flow.')
-    eq(got[5], '')
-    eq(got[6], 'Frobitz the quux and eschew obfuscation.')
-    eq(got[7:], [])
-
 def test_export_environment():
     tmp = maketemp()
     git_dir = os.path.join(tmp, 'repo.git')
@@ -472,7 +420,7 @@ Allow jdoe write access to repo
         )
     export = os.path.join(tmp, 'export', 'var', 'sites')
     print "Second Export: " + export
-    repository.export2(git_dir=git_dir, path=export)
+    repository.export(git_dir=git_dir, path=export)
     eq(sorted(os.listdir(export)),
        sorted(['foo', 'bar']))
     eq(readFile(os.path.join(export, 'foo')), 'content')

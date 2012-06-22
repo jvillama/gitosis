@@ -550,17 +550,6 @@ Allow jdoe write access to foo
             ],
         )
     
-    print git_dir
-    #export = os.path.join(tmp, 'export2')
-    #varsites = os.path.join(tmp, 'var', 'sites', projname)
-    #print "Export2: " + export
-    #print git_dir
-    #repository.export2(git_dir=git_dir, path=varsites)
-    #eq(sorted(os.listdir(varsites)),
-    #   sorted(['foo', 'bar']))
-    #eq(readFile(os.path.join(varsites, 'foo')), 'content')
-    #eq(os.listdir(os.path.join(varsites, 'bar')), ['quux'])
-    #eq(readFile(os.path.join(varsites, 'bar', 'quux')), 'another')
     child = subprocess.Popen(
         args=[
             'git',
@@ -585,41 +574,6 @@ Allow jdoe write access to foo
     eq(got[3], '')
     eq(got[4], 'Allow jdoe write access to foo')
     eq(got[5:], [])
-    
-    '''
-    cfg = RawConfigParser()
-    cfg.add_section('gitosis')
-    repositories = os.path.join(tmp, 'repositories')
-    os.mkdir(repositories)
-    cfg.set('gitosis', 'repositories', repositories)
-    generated = os.path.join(tmp, 'generated')
-    os.mkdir(generated)
-    cfg.set('gitosis', 'generate-files-in', generated)
-    cfg.add_section('group foo2')
-    cfg.set('group foo2', 'members', 'jdoe')
-    cfg.set('group foo2', 'writable', 'foo2')
-    cfg.add_section('repo foo2')
-    cfg.set('repo foo2', 'daemon', 'yes')
-    dcontrol.serve(
-        cfg=cfg,
-        user='jdoe',
-        command="git-receive-pack 'foo2'",
-        )
-    eq(os.listdir(repositories), ['foo2.git'])
-    path = os.path.join(repositories, 'foo2.git', 'git-daemon-export-ok')
-    assert os.path.exists(path)
-    
-    mirror_path = os.path.join(repositories, 'foo2.git')
-    repository.mirror(git_dir, mirror_path)
-    '''
-
-    #exportvar = os.path.join(tmp, 'var2', 'sites')
-    #repository.export2(
-    #    git_dir=mirror_path,
-    #    path=exportvar,
-    #    )
-    #eq(os.listdir(export),
-    #   ['foo'])
     
 def test_buildhook():
     buildhook.notify('asdf')

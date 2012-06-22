@@ -6,7 +6,7 @@ prefix. Repository names are forced to match ALLOW_RE.
 
 import logging
 
-import sys, os, re, subprocess
+import sys, os, re
 
 from gitosis import access
 from gitosis import repository
@@ -162,6 +162,7 @@ def serve(
     
     elif (os.path.exists(fullpath)
         and verb in COMMANDS_WRITE):
+        # it exists on the filesystem
 
         # Run buildhook.py here to notify buildserver of this repo
         buildhook.notify(relpath)
@@ -221,8 +222,5 @@ class Main(app.App):
 
         main_log.debug('Serving %s', newcmd)
         os.execvp('git', ['git', 'shell', '-c', newcmd])
-        #os.execvp('git', ['git', 'export', '-c', newcmd])
-        #subprocess.check_call(['git', 'shell', '-c', newcmd])
         main_log.error('Cannot execute git-shell.')
         sys.exit(1)
-

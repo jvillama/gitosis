@@ -30,12 +30,10 @@ class BuildHook(object):
         self.timeout = self.config.get('Gitosis Config', 'timeout')
 
     def pollmsg(self):
-        #socket.send_json({"msg": "testmsg"}) # send can block on other socket types, so keep track
         print "Sending Hello request ..."
         self.socket.send("Hello")
     
         if self.poller.poll(self.timeout):
-            #msg = socket.recv_json()
             message = self.socket.recv()
             print "Received reply [", message, "]"
         else:
