@@ -26,8 +26,7 @@ You can get ``gitosis`` via ``git`` by saying::
 
     git clone git://github.com/jvillama/gitosis.git
 
-If you already set up your ``git`` user properly on your system (if not,
-see below) and have the necessary pub keys, you may run::
+If you already have an owner pubkey, you may run::
 
     sh install.sh FILENAME.pub
 
@@ -37,6 +36,7 @@ to your system.
 You may manually install it via::
 
     python setup.py install
+    sudo adduser --system --shell /bin/sh --gecos 'git version control' --group --disabled-password --home /home/git git
     git gitosis-init < FILENAME.pub
     mkdir /etc/gitosis
     cp config /etc/gitosis/config
