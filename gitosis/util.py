@@ -1,4 +1,4 @@
-import errno
+import shutil, errno
 import os
 from ConfigParser import NoSectionError, NoOptionError
 
@@ -34,3 +34,12 @@ def getSSHAuthorizedKeysPath(config):
     except (NoSectionError, NoOptionError):
         path = os.path.expanduser('~/.ssh/authorized_keys')
     return path
+
+def copyanything(src, dst):
+    try:
+        shutil.copytree(src, dst)
+    except OSError as exc: # python >2.5
+        if exc.errno == errno.ENOTDIR:
+            shutil.copy(src, dst)
+        else: raise
+
