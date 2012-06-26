@@ -24,15 +24,25 @@ more information.
 
 You can get ``gitosis`` via ``git`` by saying::
 
-    git clone git://eagain.net/gitosis
+    git clone git://github.com/jvillama/gitosis.git
 
-And install it via::
+If you already set up your ``git`` user properly on your system (if not,
+see below) and have the necessary pub keys, you may run::
+
+    sh install.sh FILENAME.pub
+
+This will install gitosis as well as copy over the necessary config files
+to your system.
+    
+You may manually install it via::
 
     python setup.py install
+    git gitosis-init < FILENAME.pub
+    mkdir /etc/gitosis
+    cp config /etc/gitosis/config
 
 Though you may want to use e.g. ``--prefix=``. For Debian/Ubuntu
 users, the source is debianized.
-
 
 Setting up
 ==========
@@ -78,8 +88,20 @@ may also be interested in ``ssh-agent``. Create it on your personal
 computer, and protect the *private* key well -- that includes not
 transferring it over the network.
 
-Next, we need to set things up for this newly-created user. The
-following command will create a ``~/repositories`` that will hold the
+
+Setting up with install.sh
+==========
+
+After successfully adding your ``git`` user, you may run install.sh with
+the``git`` user pub key argument, like so::
+
+    # sh install.sh FILENAME.pub
+
+This script will run the installation mentioned below automatically and
+copy over the necessary the config file.
+
+Optionally, you may manually set things up for this newly-created user.
+The following command will create a ``~/repositories`` that will hold the
 ``git`` repositories, a ``~/.gitosis.conf`` that will be a symlink to
 the actual configuration file, and it will add the SSH public key to
 ``~/.ssh/authorized_keys`` with a ``command=`` option that restricts
