@@ -142,7 +142,4 @@ class Main(app.App):
         run_hook.post_update(cfg=cfg, git_dir=admin_repository)
         log.info('Symlinking ~/.gitosis.conf to repository...')
         symlink_config(git_dir=admin_repository)
-        log.info('Copying over default config into /etc/gitosis')
-        util.mkdir('/etc/gitosis')
-        util.copyanything(os.path.join(os.getcwd(), 'config'), '/etc/gitosis/config')
         log.info('Done.')
