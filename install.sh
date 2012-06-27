@@ -20,7 +20,9 @@ then
     #sudo mkdir /home/git/.ssh
     #sudo chown -R git:git /home/git/.ssh
     #sudo ssh-keygen -t rsa #create file in /home/git/.ssh/id_rsa
-    sudo -H -u git gitosis-init < $1 #/home/git/.ssh/id_rsa.pub
+    sudo cp $1 /tmp/tmp.pub
+    sudo chown git:git /tmp/tmp.pub
+    sudo -H -u git gitosis-init < /tmp/tmp.pub #/home/git/.ssh/id_rsa.pub
     sudo chmod 755 /home/git/repositories/gitosis-admin.git/hooks/post-update
     sudo mkdir /etc/gitosis
     sudo cp config /etc/gitosis/config
